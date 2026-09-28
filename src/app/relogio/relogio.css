@@ -1,0 +1,21 @@
+.relogio-container {
+  position: absolute;
+  top: 250px;   /* Distância do topo */
+  left: 680px;  /* Distância da esquerda */
+  gap: 20px;
+  font-family: Arial, sans-serif;
+  padding: 20px;
+
+}
+
+/* Estilos do Relógio Digital */
+.relogio-digital {
+  font-size: 2.5rem;
+  font-weight: bold;
+  letter-spacing: 2px;
+  color: #fff;
+  background-color: #5fb157;
+  padding: 10px 20px;
+  border-radius: 8px;
+  box-shadow: inset 0 2px 4px rgba(0,0,0,0.1);
+}

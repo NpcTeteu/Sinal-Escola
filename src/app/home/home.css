@@ -1,7 +1,5 @@
-/* 1. IMPORTAÇÃO NO TOPO (Evita o aviso no terminal) */
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap');
 
-/* Reset global */
 * {
   box-sizing: border-box;
 }
@@ -9,101 +7,164 @@
 :host {
   font-family: 'Inter', sans-serif;
   background-color: #f5f5f5;
-  
-  /* Centralização no centro exato da tela */
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  display: grid;
+  place-items: center;
   min-height: 100vh;
+  width: 100vw;
   margin: 0;
+  overflow: hidden;
 }
 
-/* Container principal */
-/* Container principal */
+/* Container principal LADO A LADO */
+.wrapper-geral {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 24px;
+  transform-origin: center;
+}
+
+/* Card Container */
 .card-container {
   position: relative;
-  width: 380px;
-  max-width: 90%;
-  
-  /* Usa 'position: relative' com 'left' e 'top' para mover sem falhas */
-  left: 210px; /* Ajuste este valor: maior = mais para a direita | menor = mais para a esquerda */
-  top: 60px;  /* Ajuste este valor: maior = mais para baixo | menor = mais para cima */
+  width: 350px;
 }
 
-/* Posiciona a fileira de discos no topo e centralizada */
+/* Discos no topo */
+/* Posicionamento da fileira inteira de discos */
 .fileira-discos {
   display: flex;
   position: absolute;
-  top: -170px;         /* Ajuste este valor se quiser subir/descer a fileira */
-  left: 40%;           /* Ponto central do container */
-  transform: translateX(-50%); /* Centralização perfeita */
-  z-index: 3;
+  
+  /* Controlo de Altura: aumenta/diminui o valor negativo para subir ou descer */
+  top: -150px; 
+  
+  /* Controlo Horizontal: ajusta a posição para os lados */
+  left: 35%;
+  transform: translateX(-50%); 
+  
+  z-index: 1; /* Garante que fica atrás do badge verde claro e do card */
 }
 
-/* Tamanho e estilo dos discos */
+/* Tamanho de cada disco individual */
 .disco {
-  width: 120px;
-  height: 120px;
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  object-fit: cover;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.25);
+  cursor: pointer
+}
+
+/* Sobreposição entre os discos (efeito leque) */
+.disco + .disco {
+  /* Quanto mais negativo o valor, mais sobrepostos os discos ficam */
+  margin-left: -45px; 
+}
+
+.disco {
+  width: 100px;
+  height: 100px;
   border-radius: 50%;
   object-fit: cover;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.25);
 }
 
-/* Sobreposição dos discos */
 .disco + .disco {
-  margin-left: -55px;
+  margin-left: -45px;
 }
 
-/* Tarjeta Verde Claro (Próximo Sinal) */
+/* Badge Verde Claro */
 .badge-topo {
   position: absolute;
-  top: -25px;
-  left: -20px;
+  top: -20px;
+  left: -15px;
   background-color: #9ecc47;
   color: white;
   font-weight: bold;
-  font-size: 24px;
-  padding: 12px 24px;
-  border-radius: 18px;
-  z-index: 2;
+  font-size: 20px;
+  padding: 10px 20px;
+  border-radius: 16px;
+  z-index: 3;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
 }
 
-/* Cartão Principal Verde Escuro */
+/* Cartão Verde Escuro */
 .card-principal {
   background-color: #275631;
-  border-radius: 14px;
-  padding: 40px 25px 25px 25px;
+  border-radius: 16px;
+  padding: 35px 20px 20px 20px;
   display: flex;
-  align-items: center; /* Alinha o texto e o play verticalmente */
-  width: 350px;
-  z-index: 1;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  position: relative;
+  z-index: 2;
 }
 
-/* Organização dos textos */
 .info-musica {
   color: white;
 }
 
 .titulo-musica {
-  font-size: 28px;
+  font-size: 24px;
   font-weight: bold;
   margin-bottom: 4px;
 }
 
 .subtitulo-playlist {
-  font-size: 16px;
+  font-size: 14px;
   font-style: italic;
   opacity: 0.9;
 }
 
-/* Ícone Play */
+/* Botão Play (Triângulo) */
 .icone-play {
+  background: transparent;
+  border: none;
+  padding: 0;
+  cursor: pointer;
   width: 0;
   height: 0;
-  border-top: 15px solid transparent;
-  border-bottom: 15px solid transparent;
-  border-left: 25px solid white;
-  margin-right: 10px;
-  margin-left: auto; /* Empurra o botão Play para a ponta direita */
+  border-top: 12px solid transparent;
+  border-bottom: 12px solid transparent;
+  border-left: 20px solid #ffffff;
+  transition: all 0.2s ease;
+}
+
+/* Estado PAUSE (Duas barras) */
+.icone-play.tocando {
+  width: 18px;
+  height: 22px;
+  border: none;
+  background: linear-gradient(
+    to right,
+    #ffffff 0px,
+    #ffffff 6px,
+    transparent 6px,
+    transparent 12px,
+    #ffffff 12px,
+    #ffffff 18px
+  );
+}
+
+/* Botão Quadrado do Calendário (Separado) */
+.Calendario {
+  background-color: #275631;
+  border: none;
+  outline: none;
+  width: 70px;
+  height: 70px;
+  border-radius: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.icon_calendario {
+  width: 36px;
+  height: 36px;
+  filter: brightness(0) invert(1);
 }
