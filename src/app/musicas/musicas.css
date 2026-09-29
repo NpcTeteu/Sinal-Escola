@@ -1,7 +1,15 @@
+/* CSS */
+.caixa-musica {
+    background-color: brown;
+    position: relative; /* Necessário para o z-index funcionar */
+    z-index: 2;         /* Garante que fica acima do fundo */
+    padding: 20px;      /* Apenas para dar tamanho e visibilidade */
+}
+
 .fundo-musica {
-    display: flex;
-    position: relative;
-    bottom: 380px;
-    left: -390px;
-    
+    position: absolute; /* Usar absolute é melhor para fundos do que relative com bottom negativo */
+    top: -340px;
+    left: 0;
+    z-index: 1;
+    width: 160%;
 }
