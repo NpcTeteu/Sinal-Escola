@@ -11,45 +11,48 @@ body {
     background-position: center;  /* Centraliza a imagem */
     background-repeat: no-repeat;  /* Evita repetição */
     background-attachment: fixed;  /* Mantém o fundo fixo */
-    background-color: #f6ffe3;    /* Cor de segurança */
+    background-color: #f5f5f5;    /* Cor de segurança */
 }
 
 #nome-playlist {
     position: absolute;
-    font-size: 45px;               /* Diminuído de 65px */
+    font-size: 26px;               /* Diminuído de 65px */
     font-family: Arial, Helvetica, sans-serif;
-    left: 170px;
-    top: 100px;                    /* Ajustado para acompanhar a diminuição */
+    left: 50px;
+    top: 50px;                    /* Ajustado para acompanhar a diminuição */
 }
 
 .Discao {
     position: absolute;            /* Alterado para absolute para alinhar melhor */
     z-index: 2;
-    left: 600px;                   /* Posição ajustada */
-    top: 350px;                    /* Posição ajustada */
-    transform-origin: center center;
-    animation: girar 5s linear infinite;
+    left: 420px;                   /* Posição ajustada */
+    top: -24px;                    /* Posição ajustada */
+    transform: scale(0.42)
 }
 
-/* Na animação mantemos o scale(1.8) para o disco ficar menor enquanto gira */
-@keyframes girar {
-    from {
-        transform: scale(1.8) rotate(0deg);
-    }
-    to {
-        transform: scale(1.8) rotate(360deg);
-    }
-}
-
-.caixa-disco {
+.caixa-disco-01 {
     display: flex;
     background-color: #5b875d;
     color: aliceblue;
     position: relative;
     z-index: 2;
     padding: 10px;
-    width: 850px;                  /* Diminuído de 900px */
-    height: 350px;                 /* Diminuído de 420px */
-    left: 300px;                   /* Posição ajustada */
-    top: 480px;                    /* Posição ajustada */
+    width: 500px;                  /* Diminuído de 900px */
+    height: 100px;                 /* Diminuído de 420px */
+    left: -10px;                   /* Posição ajustada */
+    top: 10px;                    /* Posição ajustada */
+}
+
+.caixa-disco-02 {
+    display: flex;
+    background-color: #9dd190;;
+    color: aliceblue;
+    position: relative;
+    z-index: 1;
+    transform: rotate(1deg);
+    padding: 10px;
+    width: 500px;                  /* Diminuído de 900px */
+    height: 100px;                 /* Diminuído de 420px */
+    left: 10px;                   /* Posição ajustada */
+    top: -90px;                    /* Posição ajustada */
 }
