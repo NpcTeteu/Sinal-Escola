@@ -1,47 +1,74 @@
+<!-- Cabeçalho com o botão de voltar -->
+<header class="header-container">
+  <button class="btn-acao btn-voltar" (click)="voltar()">← Voltar</button>
+</header>
+
 <main class="conteudo-principal">
   
-  <!-- 1. Bloco da Playlist (Título + Disco) -->
-  <div class="bloco-playlist">
+  <!-- Lista de Playlists -->
+  <div 
+    class="bloco-playlist" 
+    *ngFor="let p of playlists; let i = index"
+    [class.selecionada]="i === indexAtual"
+    (click)="selecionarPlaylist(i)"
+  >
     <div class="caixa-disco-01">
-      <span id="nome-playlist">{{ playlistSelecionada }}</span>
+      <span id="nome-playlist">{{ p }}</span>
     </div>
     <div class="caixa-disco-02"></div>
     <img src="Disco.svg" class="Discao" alt="Disco">
   </div>
 
-  <!-- Seletor de Playlists (Aparece se houver mais de uma) -->
-  <div class="seletor-playlist" *ngIf="playlists.length > 1">
-    <label for="select-playlist">Selecionar Playlist: </label>
-    <select id="select-playlist" [(ngModel)]="playlistSelecionada">
-      <option *ngFor="let p of playlists" [value]="p">{{ p }}</option>
-    </select>
-  </div>
-
-  <!-- 2. Grupo de Botões -->
+  <!-- Grupo de Botões -->
   <div class="grupo-botoes">
-    <!-- EVENTO DE CLIQUE AQUI: (click)="abrirModal()" -->
-    <button class="btn-acao" (click)="abrirModal()">Adicionar</button>
-    <button class="btn-acao" (click)="excluirPlaylist()">Excluir</button>
-    <button class="btn-acao">Editar</button>
+    <button class="btn-acao" (click)="abrirModalAdicionar()">Adicionar</button>
+    <button class="btn-acao" (click)="abrirModalExcluir()">Excluir</button>
+    <button class="btn-acao" (click)="abrirModalEditar()">Editar</button>
   </div>
 
 </main>
 
-<!-- 3. Modal que só abre quando o utilizador clica em "Adicionar" -->
+<!-- Modal Criar / Editar -->
 <div class="modal-overlay" *ngIf="modalAberto">
   <div class="modal-conteudo">
-    <h3>Criar Nova PlayList</h3>
+    <h3>{{ modoEdicao ? 'Editar Playlist' : 'Criar Nova Playlist' }}</h3>
     
     <input 
       type="text" 
       placeholder="Digite o nome da playlist..." 
       [(ngModel)]="novoNomePlaylist" 
-      (keyup.enter)="adicionarPlaylist()"
+      (keyup.enter)="salvarPlaylist()"
       autofocus
     />
 
     <div class="modal-botoes">
-      <button class="btn-acao" (click)="adicionarPlaylist()">Salvar</button>
+      <button class="btn-acao" (click)="salvarPlaylist()">Salvar</button>
+      <button class="btn-acao btn-cancelar" (click)="fecharModal()">Cancelar</button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal para Escolher e Excluir Playlist -->
+<div class="modal-overlay" *ngIf="modalExcluirAberto">
+  <div class="modal-conteudo">
+    <h3>Excluir Playlist</h3>
+    
+    <label for="select-excluir" style="font-size: 14px; color: #555;">
+      Selecione qual playlist deseja remover:
+    </label>
+    
+    <select 
+      id="select-excluir" 
+      [(ngModel)]="indexExcluir"
+      style="padding: 10px; border-radius: 4px; border: 1px solid #ccc; font-size: 14px; outline: none;"
+    >
+      <option *ngFor="let p of playlists; let i = index" [value]="i">
+        {{ p }}
+      </option>
+    </select>
+
+    <div class="modal-botoes">
+      <button class="btn-acao btn-excluir-modal" (click)="confirmarExclusao()">Excluir</button>
       <button class="btn-acao btn-cancelar" (click)="fecharModal()">Cancelar</button>
     </div>
   </div>
