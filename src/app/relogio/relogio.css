@@ -1,7 +1,7 @@
 .relogio-container {
   position: absolute;
-  top: 310px;   /* Distância do topo */
-  left: 1080px;  /* Distância da esquerda */
+  top: 200px;   /* Distância do topo */
+  left: 850px;  /* Distância da esquerda */
   gap: 20px;
   font-family: Arial, sans-serif;
   padding: 20px;

@@ -1,4 +1,4 @@
-<!-- Fundo fixo desacoplado (imune a zoom/escala do conteúdo) -->
+<!-- Fundo fixo desacoplado -->
 <div class="bg-fixo"></div>
 
 <!-- Cabeçalho com o botão de voltar -->
@@ -8,25 +8,42 @@
 
 <main class="conteudo-principal">
   
-  <!-- Lista de Playlists -->
-  <div 
-    class="bloco-playlist" 
-    *ngFor="let p of playlists; let i = index"
-    [class.selecionada]="i === indexAtual"
-    (click)="selecionarPlaylist(i)"
-  >
-    <div class="caixa-disco-01">
-      <span id="nome-playlist">{{ p }}</span>
-    </div>
-    <div class="caixa-disco-02"></div>
-    <img src="Disco.svg" class="Discao" alt="Disco">
-  </div>
+  <!-- Container rolável sem conflito de Snap -->
+  <div class="roleta-scroll" #roletaContainer (scroll)="onScrollContainer()">
+    
+    <!-- Espaçador Superior -->
+    <div class="espacador"></div>
 
-  <!-- Grupo de Botões -->
-  <div class="grupo-botoes">
-    <button class="btn-acao" (click)="abrirModalAdicionar()">Adicionar</button>
-    <button class="btn-acao" (click)="abrirModalExcluir()">Excluir</button>
-    <button class="btn-acao" (click)="abrirModalEditar()">Editar</button>
+    <!-- Lista de Playlists -->
+    <div 
+      class="bloco-playlist" 
+      *ngFor="let p of playlists; let i = index"
+      [class.selecionada]="i === indexAtual"
+      (click)="selecionarECentralizar(i)"
+    >
+      <div class="caixa-disco-01">
+        <span id="nome-playlist">{{ p }}</span>
+      </div>
+      <div class="caixa-disco-02"></div>
+      <img 
+        src="Disco.svg" 
+        class="Discao" 
+        [class.girando]="discoGirandoIndex === i"
+        (click)="girarDisco(i, $event)"
+        alt="Disco"
+      >
+    </div>
+
+    <!-- Grupo de Botões (Posicionado após a última playlist) -->
+    <div class="grupo-botoes">
+      <button class="btn-acao" (click)="abrirModalAdicionar()">Adicionar</button>
+      <button class="btn-acao" (click)="abrirModalExcluir()">Excluir</button>
+      <button class="btn-acao" (click)="abrirModalEditar()">Editar</button>
+    </div>
+
+    <!-- Espaçador Inferior -->
+    <div class="espacador"></div>
+
   </div>
 
 </main>
@@ -36,6 +53,22 @@
   <div class="modal-conteudo">
     <h3>{{ modoEdicao ? 'Editar Playlist' : 'Criar Nova Playlist' }}</h3>
     
+    <div *ngIf="modoEdicao" style="margin-bottom: 12px; text-align: left;">
+      <label for="select-editar" style="font-size: 14px; color: #555; display: block; margin-bottom: 4px;">
+        Selecione a playlist que deseja editar:
+      </label>
+      <select 
+        id="select-editar" 
+        [(ngModel)]="indexEdicao" 
+        (change)="atualizarNomeEdicao()"
+        style="width: 100%; padding: 10px; border-radius: 4px; border: 1px solid #ccc; font-size: 14px; outline: none;"
+      >
+        <option *ngFor="let p of playlists; let i = index" [value]="i">
+          {{ p }}
+        </option>
+      </select>
+    </div>
+
     <input 
       type="text" 
       placeholder="Digite o nome da playlist..." 
@@ -51,7 +84,7 @@
   </div>
 </div>
 
-<!-- Modal para Escolher e Excluir Playlist -->
+<!-- Modal Excluir -->
 <div class="modal-overlay" *ngIf="modalExcluirAberto">
   <div class="modal-conteudo">
     <h3>Excluir Playlist</h3>
