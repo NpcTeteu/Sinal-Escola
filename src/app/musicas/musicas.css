@@ -56,3 +56,25 @@ body {
     left: 10px;                   /* Posição ajustada */
     top: -90px;                    /* Posição ajustada */
 }
+
+.botao-mais {
+  position: absolute;
+  left: 30px;
+  top: 75px;
+  gap: 8px;
+  padding: 5px 10px;
+  background-color: #5b875d;
+  color: white;
+
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: 500;
+}
+
+.botao-mais::before {
+  content: "+";
+  font-size: 20px;
+  font-weight: bold;
+}
