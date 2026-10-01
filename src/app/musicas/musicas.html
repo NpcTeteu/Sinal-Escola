@@ -1,20 +1,48 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-</head>
-<body>
-    <img src="/Disco.svg" alt="disco-grande" class="Discao">
-
+<main class="conteudo-principal">
+  
+  <!-- 1. Bloco da Playlist (Título + Disco) -->
+  <div class="bloco-playlist">
     <div class="caixa-disco-01">
-        <b id="nome-playlist">Nome da PlayList</b>
+      <span id="nome-playlist">{{ playlistSelecionada }}</span>
     </div>
-
     <div class="caixa-disco-02"></div>
+    <img src="Disco.svg" class="Discao" alt="Disco">
+  </div>
 
-    <button class="botao-mais"></button>
+  <!-- Seletor de Playlists (Aparece se houver mais de uma) -->
+  <div class="seletor-playlist" *ngIf="playlists.length > 1">
+    <label for="select-playlist">Selecionar Playlist: </label>
+    <select id="select-playlist" [(ngModel)]="playlistSelecionada">
+      <option *ngFor="let p of playlists" [value]="p">{{ p }}</option>
+    </select>
+  </div>
 
-</body>
-</html>
+  <!-- 2. Grupo de Botões -->
+  <div class="grupo-botoes">
+    <!-- EVENTO DE CLIQUE AQUI: (click)="abrirModal()" -->
+    <button class="btn-acao" (click)="abrirModal()">Adicionar</button>
+    <button class="btn-acao" (click)="excluirPlaylist()">Excluir</button>
+    <button class="btn-acao">Editar</button>
+  </div>
+
+</main>
+
+<!-- 3. Modal que só abre quando o utilizador clica em "Adicionar" -->
+<div class="modal-overlay" *ngIf="modalAberto">
+  <div class="modal-conteudo">
+    <h3>Criar Nova PlayList</h3>
+    
+    <input 
+      type="text" 
+      placeholder="Digite o nome da playlist..." 
+      [(ngModel)]="novoNomePlaylist" 
+      (keyup.enter)="adicionarPlaylist()"
+      autofocus
+    />
+
+    <div class="modal-botoes">
+      <button class="btn-acao" (click)="adicionarPlaylist()">Salvar</button>
+      <button class="btn-acao btn-cancelar" (click)="fecharModal()">Cancelar</button>
+    </div>
+  </div>
+</div>
