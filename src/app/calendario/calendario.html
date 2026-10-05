@@ -1,1 +1,157 @@
-<p>calendario works!</p>
+<div class="calendar-wrapper">
+  <!-- BOTÃO VOLTAR -->
+  <button type="button" class="btn-back" (click)="voltar()">
+    &larr; Voltar
+  </button>
+
+  <!-- QUADRO ESQUERDO: CALENDÁRIO -->
+  <div class="calendar-box">
+    <div class="calendar-header-info">
+      <h2 class="month-name">{{ nomeMesAtual }}</h2>
+      <span class="year-label">Ano {{ anoAtual }}</span>
+    </div>
+
+    <div class="days-grid">
+      <ng-container *ngFor="let item of obterDiasDoMes()">
+        <div 
+          *ngIf="!item.outroMes"
+          class="day-number-cell"
+          [class.sunday]="item.eDomingo"
+          [class.selected]="item.selecionado"
+          (click)="selecionarDia(item)"
+        >
+          <span>{{ item.diaNumero }}</span>
+        </div>
+        <div *ngIf="item.outroMes" class="day-number-cell empty"></div>
+      </ng-container>
+    </div>
+  </div>
+
+  <!-- QUADRO DIREITO: PAINEL DE SINAIS E HORÁRIOS -->
+  <div class="schedule-panel-container">
+    <div class="schedule-top-card">
+      <div class="weekdays-row">
+        <span 
+          *ngFor="let sigla of diasDaSemana; let i = index" 
+          class="weekday-item"
+          [class.active-weekday]="i === diaDaSemanaSelecionadoIndice"
+        >
+          {{ sigla }}
+        </span>
+      </div>
+      <div class="weekdays-divider"></div>
+      <div class="track-info">
+        <span class="track-title">Música 01</span>
+        <span class="playlist-title">Playlist 01</span>
+      </div>
+    </div>
+
+    <div class="schedule-bottom-container">
+      <div class="action-sidebar">
+        <button type="button" class="action-btn" title="Excluir Sinal" (click)="abrirModalExcluir()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="3 6 5 6 21 6"></polyline>
+            <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+          </svg>
+        </button>
+
+        <button type="button" class="action-btn" title="Adicionar Sinal" (click)="abrirModalAdicionar()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="10"></circle>
+            <polyline points="12 6 12 12 16 14"></polyline>
+          </svg>
+        </button>
+
+        <button type="button" class="action-btn" title="Editar Sinal" (click)="abrirModalEditar()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+            <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+          </svg>
+        </button>
+      </div>
+
+      <div class="times-list-card">
+        <div class="times-scroll-container">
+          <div *ngFor="let item of agendamentosDoDiaSelecionado" class="time-pill">
+            <span class="time-title">{{ item.titulo }}</span>
+            <span class="time-value">{{ item.horaInicio }}</span>
+            <button type="button" class="btn-delete-item" (click)="eliminarHorarioDireto(item.id)" title="Eliminar">
+              &times;
+            </button>
+          </div>
+          <div *ngIf="agendamentosDoDiaSelecionado.length === 0" class="no-times">
+            Sem horários
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal Criar / Editar -->
+<div class="modal-overlay" *ngIf="modalAberto">
+  <div class="modal-conteudo">
+    <h3>{{ modoEdicao ? 'Editar Sinal' : 'Criar Novo Sinal' }}</h3>
+
+    <div *ngIf="modoEdicao" style="margin-bottom: 12px; text-align: left;">
+      <label for="select-editar" style="font-size: 14px; color: #555; display: block; margin-bottom: 4px;">
+        Selecione o sinal que deseja editar:
+      </label>
+      <select 
+        id="select-editar" 
+        [(ngModel)]="indexEdicao" 
+        (change)="atualizarCamposEdicao()"
+        style="width: 100%; padding: 10px; border-radius: 4px; border: 1px solid #ccc; font-size: 14px; outline: none;"
+      >
+        <option *ngFor="let item of agendamentosDoDiaSelecionado; let i = index" [value]="i">
+          {{ item.titulo }} ({{ item.horaInicio }})
+        </option>
+      </select>
+    </div>
+
+    <input 
+      type="text" 
+      placeholder="Digite o nome do sinal..." 
+      [(ngModel)]="novoTitulo" 
+      (keyup.enter)="salvarAgendamento()"
+      autofocus
+    />
+
+    <input 
+      type="time" 
+      [(ngModel)]="novaHora" 
+      style="padding: 12px; border: 1px solid #ccc; border-radius: 6px; font-size: 18px; outline: none; margin-top: 10px;"
+    />
+
+    <div class="modal-botoes">
+      <button class="btn-acao" (click)="salvarAgendamento()">Salvar</button>
+      <button class="btn-acao btn-cancelar" (click)="fecharModal()">Cancelar</button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal Excluir -->
+<div class="modal-overlay" *ngIf="modalExcluirAberto">
+  <div class="modal-conteudo">
+    <h3>Excluir Sinal</h3>
+
+    <label for="select-excluir" style="font-size: 14px; color: #555;">
+      Selecione qual sinal deseja remover:
+    </label>
+
+    <select 
+      id="select-excluir" 
+      [(ngModel)]="indexExcluir"
+      style="padding: 10px; border-radius: 4px; border: 1px solid #ccc; font-size: 14px; outline: none;"
+    >
+      <option *ngFor="let item of agendamentosDoDiaSelecionado; let i = index" [value]="i">
+        {{ item.titulo }} ({{ item.horaInicio }})
+      </option>
+    </select>
+
+    <div class="modal-botoes">
+      <button class="btn-acao btn-excluir-modal" (click)="confirmarExclusao()">Excluir</button>
+      <button class="btn-acao btn-cancelar" (click)="fecharModal()">Cancelar</button>
+    </div>
+  </div>
+</div>
